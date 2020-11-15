@@ -20,7 +20,7 @@ namespace CaesarCipher
                 Console.WriteLine("Please enter a correct key value!");
                 return;
             }
-            else { caesarCipher.key = key; }
+            else { caesarCipher.setKey(key); }
 
             if (mode == 'y')
             {

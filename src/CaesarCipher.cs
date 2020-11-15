@@ -6,7 +6,7 @@ namespace CaesarCipher
 {
     class CaesarCipher
     {
-        public char key { get; set; }
+        private char _key;
         
         private static Dictionary<char, byte> alphabetPositions = new Dictionary<char, byte>
         {
@@ -21,9 +21,56 @@ namespace CaesarCipher
             {'y', 24 }, {'z', 25 }
         };
 
+        public bool setKey(char key)
+        {
+            if (!alphabetPositions.ContainsKey(key)) { return false; }
+            
+            _key = key;
+            return true;
+        }
+
+        private char getKeyFromValue(byte value)
+        {
+            foreach (KeyValuePair<char, byte> entry in alphabetPositions)
+            {
+                if (entry.Value == value)
+                {
+                    return entry.Key;
+                }
+            }
+
+            return ' ';
+        }
+
         public string Encrypt(string plainText)
         {
-            throw new NotImplementedException();
+            string cipherText = "";
+            byte keyRange = alphabetPositions[_key];
+
+            foreach (char letter in plainText)
+            {
+                bool isUpper = false;
+                if (Char.IsUpper(letter)) { isUpper = true; }
+
+                // Detect the character position and update it based on the key
+                byte charValue;
+                try
+                {
+                    charValue = (byte)(alphabetPositions[Char.ToLower(letter)] + keyRange);
+                }
+                catch (KeyNotFoundException e)
+                {
+                    cipherText += letter;
+                    continue;
+                }
+
+                if (charValue > 25) { charValue -= 26; };
+
+                char cipherLetter = getKeyFromValue(charValue);
+                cipherText += isUpper ? Char.ToUpper(cipherLetter) : cipherLetter;
+            }
+
+            return cipherText;
         }
 
         public string Decrypt(string cipherText)
