@@ -38,10 +38,11 @@ namespace CaesarCipher
 
                 result = caesarCipher.Decrypt(cipherText);
             }
-            else { Console.WriteLine("[ERROR]: Please enter correct value"); }
+            else { Console.WriteLine("\n[ERROR]: Please enter correct value"); }
 
             //Output the result
-            Console.WriteLine($"Result:\n{result}");
+            Console.WriteLine($"\nResult:\n{result}");
+            Console.ReadKey();
         }
     }
 }

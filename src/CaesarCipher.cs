@@ -29,7 +29,7 @@ namespace CaesarCipher
             return true;
         }
 
-        private char getKeyFromValue(byte value)
+        private char getKeyFromValue(sbyte value)
         {
             foreach (KeyValuePair<char, byte> entry in alphabetPositions)
             {
@@ -53,10 +53,10 @@ namespace CaesarCipher
                 if (Char.IsUpper(letter)) { isUpper = true; }
 
                 // Detect the character position and update it based on the key
-                byte charValue;
+                sbyte charValue;
                 try
                 {
-                    charValue = (byte)(alphabetPositions[Char.ToLower(letter)] + keyRange);
+                    charValue = (sbyte)(alphabetPositions[Char.ToLower(letter)] + keyRange);
                 }
                 catch (KeyNotFoundException e)
                 {
@@ -75,7 +75,32 @@ namespace CaesarCipher
 
         public string Decrypt(string cipherText)
         {
-            throw new NotImplementedException();
+            string plainText = "";
+            byte keyRange = alphabetPositions[_key];
+
+            foreach (char letter in cipherText)
+            {
+                bool isUpper = false;
+                if (Char.IsUpper(letter)) { isUpper = true; }
+
+                sbyte charValue;
+                try
+                {
+                    charValue = (sbyte)(alphabetPositions[Char.ToLower(letter)] - keyRange);
+                }
+                catch (KeyNotFoundException e)
+                {
+                    plainText += letter;
+                    continue;
+                }
+
+                if (charValue < 0) { charValue += 26; };
+
+                char plainLetter = getKeyFromValue(charValue);
+                plainText += isUpper ? Char.ToUpper(plainLetter) : plainLetter;
+            }
+
+            return plainText;
         }
     }
 }
